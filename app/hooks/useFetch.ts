@@ -11,8 +11,16 @@ const useFetch = <TData>(url: string) => {
     fetch(url)
       .then((response) => response.json())
       .then((data: TData) => setData(data))
-      .catch((err) => {
-        setError(err);
+      //narrowing
+      .catch((err: unknown) => {
+        if (err instanceof Error) {
+          setError(err.message);
+        }
+        if (typeof err === "string") {
+          setError(err);
+        } else {
+          setError("Une erreur est survenue");
+        }
       })
       .finally(() => {
         setLoading(false);
